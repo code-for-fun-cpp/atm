@@ -1,23 +1,23 @@
-import os
+import os # used to give commands to Terminal
 import pandas as pd
-import functions_atm.Deposit as Deposit
-import functions_atm.Withdraw as Withdraw
-import functions_atm.change_pin as Pin
-import functions_atm.History as His
-import functions_atm.Data_types as dtypes
+import functions_atm.Deposit as Deposit #Handels the Deposit Process
+import functions_atm.Withdraw as Withdraw # Handels the Withdrawl
+import functions_atm.change_pin as Pin # Changes the Pin
+import functions_atm.History as His # Show the transtion history
+import functions_atm.Data_types as dtypes # tell pnadas the dtypes of column of Main.csv
 
 
-def login():
-    os.system('cls')
+def login(): # Hadels login
+    os.system('cls') # Clear the Terminal
     acc = str(input("Enter Card No: "))
     pin = str(input("Enter Pin: "))
-    rf = pd.read_csv("Main.csv",dtype=dtypes.datatypes)
+    rf = pd.read_csv("Main.csv",dtype=dtypes.datatypes) # read main.csv with proprer dtypes
     for i in range(len(rf['Card_No'])):
-        if(str(rf['Card_No'][i]) == acc):
-            if(str(rf['Card_Pin'][i] )== pin):
+        if(str(rf['Card_No'][i]) == acc): # check the account
+            if(str(rf['Card_Pin'][i] )== pin): # checks the Pin
                 print("Login in success Fully")
-                os.system('pause')
-                login_interface(i)
+                os.system('pause') #Paues the Terminal
+                login_interface(i) # Takes to Login Interface
                 break
             else:
                 print("Invalid Pin or Card No. Please try again")
@@ -28,8 +28,8 @@ def login():
 
 def login_interface(index_no):
     while(True):
-        rf = pd.read_csv("Main.csv",dtype=dtypes.datatypes)
-        os.system('cls')
+        rf = pd.read_csv("Main.csv",dtype=dtypes.datatypes) # read main.csv with proprer dtypes
+        os.system('cls') 
         print("Welocome",rf['First_Name'][index_no],rf['Last_Name'][index_no],"to the User Interface")
         print("Name :",rf['First_Name'][index_no],rf['Last_Name'][index_no],end=('\t'*4))
         print("Account No:",rf['Account_No'][index_no])
@@ -44,12 +44,12 @@ def login_interface(index_no):
         print("3. PIN Change")
         print("4. Transaction History")
         com = input("Enter your command /> ")
-        if(com.lower() == 'logout'):
+        if(com.lower() == 'logout'): #Handles the Logout
             print("Thank You for Login")
             os.system('pause')
             break
         elif(com == '1'):
-            Deposit.deposit(index_no)
+            Deposit.deposit(index_no) 
             pass
         elif(com == '2'):
             Withdraw.Withdraw(index_no)

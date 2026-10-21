@@ -1,9 +1,9 @@
-import os
+import os # used to give commands to cmd
 import pandas as pd
-import datetime as dt
-import functions_atm.Data_types as dtypes
+import datetime as dt # used to get date and time for record cration
+import functions_atm.Data_types as dtypes # to specify the data types of Main.csv
 
-def create_rec(Ac_No, deposit):
+def create_rec(Ac_No, deposit): #Creates a New record file for new user
     record = {
         "Date":[],
         "Time":[],
@@ -13,17 +13,17 @@ def create_rec(Ac_No, deposit):
     }
     file_name = str(Ac_No) + ".csv"
     rs = pd.DataFrame(record)
-    date_ = dt.date.today()
-    date_ = date_.strftime("%d-%m-%Y")
-    time_ = dt.datetime.now()
-    time_ = time_.strftime("%H:%M:%S")
+    date_ = dt.date.today() # Gets the Current date
+    date_ = date_.strftime("%d-%m-%Y") # change the format of the date
+    time_ = dt.datetime.now() # Gets the Current time
+    time_ = time_.strftime("%H:%M:%S") # change the format of the date
     rs.loc[len(rs)] = [date_,time_,0,deposit,deposit]
     rs.to_csv("Transaction/"+file_name,index=False)
     pass
 
-def create_acc():
+def create_acc(): #Add a new user in Main.csv
     os.system('cls')
-    rec = pd.read_csv("Main.csv",dtype=dtypes.datatypes)
+    rec = pd.read_csv("Main.csv",dtype=dtypes.datatypes) #tells pandas the dtypes of Coloums
     print("Welocome to Registration Interface. Please Enter all of your Details carefull")
     F_Name = input("First Name: ")
     L_Name = input("Last Name: ")
@@ -46,9 +46,9 @@ def create_acc():
     depost = float(input("Intial Depost(in Rs): "))
     rec.loc[len(rec)] = [Acc_No,Card_No,F_Name.capitalize(),L_Name.capitalize(),Card_Pin,Bank_Name,
                          ifsc_code,depost]
-    rec = rec.sort_values(by=['Card_No'],ascending=True)
+    rec = rec.sort_values(by=['Card_No'],ascending=True) # Sotre the values in sorted order
     rec.to_csv("Main.csv",index=False)
-    create_rec(Acc_No,depost)
+    create_rec(Acc_No,depost) # creating record for new user
     print("Registration Completed")
-    os.system('pause')  
+    os.system('pause')  # Pauses the Cmd/terminal windows
     pass

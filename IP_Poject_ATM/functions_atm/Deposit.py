@@ -1,28 +1,28 @@
-import pandas as pd
-import os
-import datetime as dt
-import functions_atm.Data_types as dtypes
+import pandas as pd 
+import os # used to give commands to cmd
+import datetime as dt # used to get date and time for record cration
+import functions_atm.Data_types as dtypes # to specify the data types of Main.csv
 
 def deposit(index_no):
-    os.system('cls')
-    rec = pd.read_csv("Main.csv",dtype=dtypes.datatypes)
+    os.system('cls') # clears the Terminal
+    rec = pd.read_csv("Main.csv",dtype=dtypes.datatypes) # reads the Main.csv with specified dtypes 
     ammount = int(input("Enter the Deposited ammount: "))
     pin = input("Enter your pin to conform the transtion: ")
-    if(pin != str(rec['Card_Pin'][index_no])):
+    if(pin != str(rec['Card_Pin'][index_no])): # checks the pin
         print("Invaild Pin. Try again")
         os.system('Pause')
         return
-    transction_rec =  str(rec['Account_No'][index_no]) + '.csv'
-    tran = pd.read_csv('Transaction/'+transction_rec)
-    total = float(ammount) + float(tran['End Balance'][len(tran)-1])
-    date_ = dt.date.today()
-    date_ = date_.strftime("%d-%m-%Y")
-    time_ = dt.datetime.now()
-    time_ = time_.strftime("%H:%M:%S")
-    tran.loc[len(tran)] = [date_,time_,0,ammount,total]
-    tran.to_csv('Transaction/'+transction_rec,index=False)
-    rec.loc[index_no, 'Total_Deposit'] = total
-    rec.to_csv("Main.csv",index=False)
+    transction_rec =  str(rec['Account_No'][index_no]) + '.csv' #Transtion record file name
+    tran = pd.read_csv('Transaction/'+transction_rec) # Reads the Trnstion file
+    total = float(ammount) + float(tran['End Balance'].iloc[-1]) # Updates the blance
+    date_ = dt.date.today() #gets the date
+    date_ = date_.strftime("%d-%m-%Y") # formates the date
+    time_ = dt.datetime.now() # gets the time
+    time_ = time_.strftime("%H:%M:%S") # formates the time
+    tran.loc[len(tran)] = [date_,time_,0,ammount,total] 
+    tran.to_csv('Transaction/'+transction_rec,index=False) #Updates the transtion record
+    rec.loc[index_no, 'Total_Deposit'] = total # Update the Total Deposit
+    rec.to_csv("Main.csv",index=False) # Update the Main.csv
     print("Transaction completed")
     res = input("Do you want to print receipt(Y/N): ")
     if(res.upper() == 'Y'):
