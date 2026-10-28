@@ -347,7 +347,7 @@ def admin_interface():
         print("Total No of Transtions: ", t_tan)
         print("*"*Width)
         print("Enter commad no to execute the commad or type Logout to leave")
-        print("\t\t\t\t 1. Disply Registerd Users ")
+        print("\t\t\t\t 1. Disply All Registerd Users ")
         print("\t\t\t\t 2. Update Users Indromation")
         print("\t\t\t\t 3. Search User")
         print('\t\t\t\t 4. Search Tanstion by Dates')
