@@ -16,10 +16,12 @@ def title(): #Handels the title printing of main Window
     Width = os.get_terminal_size().columns #gets the width of the terminal
     print("*"*Width)
     print("|","|",sep=' '*(Width-2))
+    print("|","St. Francis Sr .Sec School, Ajmer ","|",sep=' '*int((Width-36)/2))
     print("|","CBSE IP Project 2026-27 on Topic ATM","|",sep=' '*int((Width-38)/2))
     print("|","Wlecome to AUTOMATED TELLER MACHINE (ATM) ","|",sep=' '*int((Width-44)/2))
     print("|","|",sep=' '*(Width-2))
     print("*"*Width)
+    print(" ")
     pass
 
 
@@ -35,11 +37,14 @@ def about():
     print('\t project name \t\t\t\t : \t\t\t\t  AUTOMATED TELLER MACHINE (ATM)')
     print('\n')
     print('\t School \t\t\t\t : \t\t\t\t  St Francis Sr. Sec. School')
+    print('\n')
     print('\t Address \t\t\t\t : \t\t\t\t  Alwar Gate, Ajmer')
+    print('\n')
     print('\t Guided by \t\t\t\t : \t\t\t\t  Mr . Vijendar')
     print('\n')
     print('\t Submitted by  \t\t\t\t : \t\t\t\t  Harshit,Raghvendar,Yash')
     print('\t Class : XII')
+    print("*"*Width)
     os.system('pause')
 
 def create_rec(Ac_No, deposit): #Creates a New record file for new user
@@ -62,13 +67,26 @@ def create_rec(Ac_No, deposit): #Creates a New record file for new user
 
 def create_acc(): #Add a new user in Main.csv
     os.system('cls')
+    title()
     rec = pd.read_csv("Main.csv",dtype=datatypes) #tells pandas the dtypes of Coloums
     print("Welocome to Registration Interface. Please Enter all of your Details carefull")
     F_Name = input("First Name: ")
     L_Name = input("Last Name: ")
     Card_No = input("Card No (5-digit): ")
+    if(len(Card_No) != 5 or not Card_No.isdigit()):
+        print("Enter Vailed Card No")
+        os.system("pause")
+        return
     Acc_No = input("Account No (6-digit): ")
+    if(len(Acc_No) != 6 or not Acc_No.isdigit()):
+        print("Enter Vailed Account No")
+        os.system("pause")
+        return
     Card_Pin = input("Card Pin (4-digit): ")
+    if(len(Card_Pin) != 4 or not Card_Pin.isdigit()):
+        print("Enter Vailed Card Pin")
+        os.system("pause")
+        return
     print("Please Select Bank Name from below list")
     print("1. State Bank of India (SBI)")
     print("2. HDFC Bank")
@@ -83,6 +101,12 @@ def create_acc(): #Add a new user in Main.csv
     elif(B_inp == '5'): Bank_Name = "Punjab National Bank (PNB)"
     ifsc_code = input("IFSC Code: ")
     depost = float(input("Intial Depost(in Rs): "))
+    for i in range(len(rec)):
+        if(rec['Account_No'][i] == Acc_No or rec['Card_No'][i] == Card_No):
+            print("Account or Card No is Already register. Please Login (Account and Card No are unique for each user)")
+            os.system('pause')
+            return
+        pass
     rec.loc[len(rec)] = [Acc_No,Card_No,F_Name.capitalize(),L_Name.capitalize(),Card_Pin,Bank_Name,
                          ifsc_code,depost]
     rec = rec.sort_values(by=['Card_No'],ascending=True) # Sotre the values in sorted order
@@ -94,6 +118,7 @@ def create_acc(): #Add a new user in Main.csv
 
 def Change_Pin(index_no):
     os.system("cls") # Clear the terminal
+    title()
     rec  = pd.read_csv("Main.csv",dtype=datatypes)
     old_pin = input("Current Pin: ")
     new_pin = input("New Pin: ")
@@ -102,7 +127,7 @@ def Change_Pin(index_no):
         print("Please Enter Correct Current Pin")
         os.system("pause") # To pause the terminal
         return
-    elif(len(new_pin) != 4 and new_pin.isdigit()): # Check the len of the new pin
+    elif(len(new_pin) != 4 or not new_pin.isdigit()): # Check the len of the new pin
         print("Pin lenght should be 4 digits")
         os.system("pause")
         return
@@ -120,6 +145,7 @@ def Change_Pin(index_no):
 
 def deposit(index_no):
     os.system('cls') # clears the Terminal
+    title()
     rec = pd.read_csv("Main.csv",dtype=datatypes) # reads the Main.csv with specified dtypes 
     ammount = int(input("Enter the Deposited ammount: "))
     pin = input("Enter your pin to conform the transtion: ")
@@ -158,6 +184,7 @@ def deposit(index_no):
 
 def Withdraw(index_no):
     os.system('cls') #Clears the Treminal 
+    title()
     rec = pd.read_csv("Main.csv",dtype=datatypes) # reades main.csv with proper datatypes 
     ammount = int(input("Enter the Withdrawl ammount: "))
     transction_rec =  str(rec['Account_No'][index_no]) + '.csv'
@@ -236,6 +263,7 @@ def graph_(file, L_enters): #Make the graph of the transtions
 
 def view_History(account):
     os.system('cls') # Clear the terminal
+    title()
     tran_file  = 'Transaction/'+ str(account) + ".csv"
     tran_rec = pd.read_csv(tran_file) # Reads transtion file
     print("Account No:",account)
@@ -255,6 +283,7 @@ def view_History(account):
 
 def Del_Acc(index_no):
     os.system('cls')
+    title()
     rec = pd.read_csv("Main.csv", dtype=datatypes)
     acc = rec['Account_No'][index_no]
     u_pin = rec['Card_Pin'][index_no]
@@ -276,9 +305,13 @@ def Del_Acc(index_no):
 
 def login(): # Hadels login
     os.system('cls') # Clear the Terminal
+    title()
     acc = str(input("Enter Card No: "))
     pin = str(input("Enter Pin: "))
     rec = pd.read_csv("Main.csv",dtype=datatypes) # read main.csv with proprer dtypes
+    if(acc == "admin" and pin == "9531"):
+        admin_interface()
+        return
     for i in range(len(rec['Card_No'])):
         if(str(rec['Card_No'][i]) == acc): # check the account
             if(str(rec['Card_Pin'][i] )== pin): # checks the Pin
@@ -289,28 +322,75 @@ def login(): # Hadels login
             else:
                 print("Invalid Pin or Card No. Please try again")
                 os.system('pause')
-                break
+                return
         pass
+    print("Card NO Does exist.Please Register the Account")
+    os.system('pause')
     pass
+
+def admin_interface():
+    while True:
+        rec = pd.read_csv("Main.csv",dtype=datatypes)
+        Width = os.get_terminal_size().columns
+        os.system("cls")
+        title()
+        t_tan = 0
+        for i in range(len(rec)):
+            file = "Transaction/"+ str(rec["Account_No"][i]) + ".csv"
+            tran = pd.read_csv(file)
+            t_tan = t_tan + len(tran)
+            pass
+        print("Welocome Come to Adim Interface")
+        print("Total No of Account's Register:", len(rec), end=('\t'*4))
+        print("Total Ammount Deposted:", rec["Total_Deposit"].sum())
+        print("\n")
+        print("Total No of Transtions: ", t_tan)
+        print("*"*Width)
+        print("Enter commad no to execute the commad or type Logout to leave")
+        print("\t\t\t\t 1. Disply Registerd Users ")
+        print("\t\t\t\t 2. Update Users Indromation")
+        print("\t\t\t\t 3. Search User")
+        print('\t\t\t\t 4. Search Tanstion by Dates')
+        print("\t\t\t\t 5. Dispalay Transtion History")
+        print("\t\t\t\t 6. Delecte User Account")
+        com = input("Enter your command /> ")
+        if(com.lower() == 'logout'): #Handles the Logout
+            print("Thank You for Login")
+            os.system('pause')
+            break
+        else:
+            print("Please Enter Vaild command. Try again")
+            os.system('pause')
+            pass
+        pass        
+        pass
+    
 
 def login_interface(index_no):
     while(True):
         rec = pd.read_csv("Main.csv",dtype=datatypes) # read main.csv with proprer dtypes
         os.system('cls') 
+        Width = os.get_terminal_size().columns
+        title()
         print("Welocome",rec['First_Name'][index_no],rec['Last_Name'][index_no],"to the User Interface")
+        print("\n")
         print("Name :",rec['First_Name'][index_no],rec['Last_Name'][index_no],end=('\t'*4))
         print("Account No:",rec['Account_No'][index_no])
+        print("\n")
         print("Card No:",rec['Card_No'][index_no],end=('\t'*5))
         print("Card Pin: XXXX")
+        print("\n")
         print("Bank Name:",rec['Bank_Name'][index_no],end=('\t'*4))
         print("IFSC code:",rec['IFSC_CODE'][index_no])
+        print("\n")
         print("Total Deposit:",rec['Total_Deposit'][index_no])
+        print("*"*Width)
         print("Enter commad no to execute the commad or type Logout to leave")
-        print("1. Chash Deposit")
-        print("2. Chash Withdrawal")
-        print("3. PIN Change")
-        print("4. Transaction History")
-        print("5. Close or Delete Account")
+        print("\t\t\t\t 1. Chash Deposit")
+        print("\t\t\t\t 2. Chash Withdrawal")
+        print("\t\t\t\t 3. PIN Change")
+        print("\t\t\t\t 4. Transaction History")
+        print("\t\t\t\t 5. Close or Delete Account")
         com = input("Enter your command /> ")
         if(com.lower() == 'logout'): #Handles the Logout
             print("Thank You for Login")
@@ -343,11 +423,10 @@ def login_interface(index_no):
 
 while(True):
     title()
-    print(" ")
     print("Enter commad no to execute the commad or type Exit to leave")    
-    print("1. Create or Register Account")
-    print("2. User login")
-    print("3. About project")
+    print("\t\t\t\t 1. Create or Register Account")
+    print("\t\t\t\t 2. User login")
+    print("\t\t\t\t 3. About project")
     inp = input("Enter your command /> ") 
     if(inp.lower() == "exit"):
         print("Thank You for visiting")
